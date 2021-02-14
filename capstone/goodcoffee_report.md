@@ -1,5 +1,5 @@
 
-# Using data to decide where to open a new coffee shop
+# Using data to decide where to open a new coffee shop in Helsinki region
 
 ![Coffee shop](jazmin-quaynor-9Y8vxVQN4o4-unsplash_s.png)
 
@@ -27,44 +27,61 @@ There are 168 postal code areas in the region, as shown in the following map.
 
 ![Postal code areas](images/postal_code_areas.PNG)
 
-### Economics data
+### Population end economics data
 
-The main economics data about the region can be fetched from here.
+The main population data about the region can be fetched from the statistics institute of Finland: https://pxnet2.stat.fi/PXWeb/pxweb/fi/Postinumeroalueittainen_avoin_tieto/Postinumeroalueittainen_avoin_tieto__2020/paavo_pxt_12f1.px/
 
-https://pxnet2.stat.fi/PXWeb/pxweb/fi/Postinumeroalueittainen_avoin_tieto/Postinumeroalueittainen_avoin_tieto__2020/paavo_pxt_12f1.px/
-
-The data looks like this, with 168 rows and many columns, only small portion of the columns and rows are shown here.
+The data looks like this, with one row for each postal code area, and many columns. Only small portion of the columns and rows are shown here.
 ![Economic data table](images/economic_data1.PNG)
 
 One challenge is that the coordinate data about the postal code areas is in EUREF-FIN -format, as can be seen in the columns named "X-koordinaatti metreinä", and "Y-koordinaatti metreinä". This data has to be converted to the international WGS84 coordinate system so that it can be fed to the Foursquare API. For this conversion python package "pyproj" was used.
 
-We will use the economics data to clearly define what kind of population lives in the different areas, and what kind of buying power they have. We will also try to look into the amount of hotels and other hospitability businesses in the areas, hypothesis being that if there are hotels and other venues nearby maybe the customers would use the cafe as well.
+The population and economics data of the postal code areas is used to define what kind of population lives in the different areas, and what kind of buying power they have. We will also try to look into the amount of hotels and other hospitability businesses in the areas, hypothesis being that if there are hotels and other venues nearby maybe the customers would use the cafe as well.
 
 ### The venue data
 
-For the venue data we will be using Foursquare API (https://developer.foursquare.com/docs/places-api/). The venue data will help to establish knowledge of the existing competition and other venues as well. To match the venue data to the postal code areas we would need the coordinates for the approximate center of each postal code.
+For the venue data we will be using Foursquare API (https://developer.foursquare.com/docs/places-api/). The venue data will help to establish knowledge of the existing competition and other venues as well. To match the venue data to the postal code areas we would need the coordinates for the approximate center of each postal code. The method is approximate since only a distance from the "center" of the postal code area will be used, but I feel that it's good enough.
 
 ## Methodology 
 
-section which represents the main component of the report where you discuss and describe any exploratory data analysis that you did, any inferential statistical testing that you performed, if any, and what 
-machine learnings were used and why.
-
-I started with simple exploratory analysis to look at the distributions of the data. I looked at the inhabitant counts per postal code area:
+I started with simple exploratory analysis to look at the distributions of the data, such as the inhabitant counts per postal code area:
 
 ![Inhabitant counts](images/inhabitants_per_code.png)
 
+The household income:
 
-And I looked at the household income:
+![Household income](images/household_income.png)
 
-![Household income](images/household_income.PNG)
+And the average population age:
+
+![Average age](images/average_age.png)
 
 ### Finding the properties of each postal code area
 
-I used the K-means algorithm to group the region into clusters based on population and economics data, before doing that the data was analysed using the elbow method to find the optimal value of K. The following results suggests that K = 7 would work the best, so this was used as the value.
+I used the K-means algorithm to group the region into clusters based on population and economics data, before doing that the data was analysed using the elbow method to find the optimal value of K. 
+
+To combine both the population data and venue data I intersected the best areas found from both data sets.
+
+### Venue types of postal code areas
+
+To group the postal code areas based on the venue types I also used k-means. At first I determined the optimal K value and then converted the category column into one-hot columns which can be used as the input in k-means.
+
+The following plot shows the 9 venue category groups and the most common venue types. 
+
+![Venue categories](images/venue_categories.PNG)
+
+## Analysis
+
+### Properties of each postal code area, population and venue data
+
+The following results suggests that K = 7 would work the best, so this was used as the value.
 
 ![K-means elbow](images/econ_kmeans_elbow.PNG)
 
 ![K-means elbow](images/econ_kmeans_elbow_chart.PNG)
+
+The result of the clustering the population data with the cluster count K = 7:
+![Average age](images/pop_properties.PNG)
 
 From the clustering results it can be seen that there is indeed separate types of areas in the region.
 
@@ -75,7 +92,7 @@ Based on the analysis of the clusters they could be given names:
 
 0. 'Low density, ManyChildren, Young'
 1. 'LowIncome, Older, No University degrees'
-2. 'Lowest income, No children'
+2. 'Lowest income, No children, Youngest'
 3. 'No population'
 4. 'Low income, various other factors'
 5. 'High income, University degrees, Low density'
@@ -83,25 +100,37 @@ Based on the analysis of the clusters they could be given names:
 
 It looks like cluster 6 could be a good choice for the location based on the properties of the population and economic statistics of the postal code areas.
 
-## Analysis
+I plotted the cluster 6 areas on map and it looks like this, it seems there is one outlier on the western side of the map:
+
+![Population stats group 6](images/area_map_cluster6.PNG)
+
+
+
+![Venue clusters](images/venue_clusters.PNG)
+
+
 
 ## Results 
 
-section where you discuss the results.
 
 From the results it can be seem There are clearly different types of areas in the Helsinki capital region, some areas are relatively sparsely populated.
 
+Based on the discussions with the owners of the Good coffee company it has been found that they would like to find a place with relatively high population density that would have good purchasing power and also an existing variety of food and hospitability related venues.
+
+We can find this type of areas by creating an intersection of the economic cluster 6 and venue cluster 1 which is shown on the following map:
+
+![Intersection](images/intersection_map.PNG)
 
 ## Discussion 
 
-section where you discuss any observations you noted and any recommendations you can make based on the results.
+
 
 ## Conclusion 
 
+There are some easy improvement possibilities. For example, since k-means tends to produce same sized clusters, it might be better to use some other clustering algorithm.
 
-section where you conclude the report.
+More data would also help, there are many other data sources which could be utilized in this kind of analysis. For example there is a lot of public transport data openly available for Helsinki region.
 
-It would be easy to try different clustering algorithms, maybe that would be one area for futher improvement.
 
 
 
