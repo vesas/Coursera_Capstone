@@ -7,7 +7,7 @@
 
 Good Coffee Company Ltd has decided to expand to the Helsinki capital region. One question remains: Which neighborhood would be a good location for the new coffee shop?
 
-To provide some basis for this decision, I analyzed data about the Helsinki capital region. I looked at the characteristics of the postal code areas, and also analysed the existing offering of cafés and restaurants in the area.
+To provide some basis for this decision, I analyzed data from the Helsinki capital region. I looked at the characteristics of the population in postal code areas, and also analysed the existing offering of cafés and restaurants in each postal code.
 
 Helsinki capital region is an area which contains the cities of Vantaa, Espoo and Kauniainen, in addition to the capital of Finland: Helsinki. There are approximately 1.19 million inhabitants in the Helsinki capital region.
 
@@ -19,17 +19,15 @@ The aim of this study is to help the stakeholders of this imaginary coffee compa
 Data from several sources is combined for this analysis. The main data sources are the helsinki region infoshare site (hri.fi), and Foursquare places API (https://developer.foursquare.com/docs/places-api/).
 
 ### Map data
-The map data about the postal areas can be fetched from here: https://hri.fi/data/fi/dataset//paakaupunkiseudun-postinumeroalueet
+The map data about the postal areas was fetched from the helsinki region infoshare site: https://hri.fi/data/fi/dataset//paakaupunkiseudun-postinumeroalueet
 
-The map data was in KML format and was converted to GeoJSON format using python package "kml2geojson".
-
-There are 168 postal code areas in the region, as shown in the following map. 
+The map data was downloaded in KML format and was converted to GeoJSON format using python package "kml2geojson". There are 168 postal code areas in the region, as shown in the following map. 
 
 ![Postal code areas](images/postal_code_areas.PNG)
 
 ### Population end economics data
 
-The main population data about the region can be fetched from the statistics institute of Finland: https://pxnet2.stat.fi/PXWeb/pxweb/fi/Postinumeroalueittainen_avoin_tieto/Postinumeroalueittainen_avoin_tieto__2020/paavo_pxt_12f1.px/
+The main population data about the region was fetched from the statistics institute of Finland: https://pxnet2.stat.fi/PXWeb/pxweb/fi/Postinumeroalueittainen_avoin_tieto/Postinumeroalueittainen_avoin_tieto__2020/paavo_pxt_12f1.px/
 
 The data looks like this, with one row for each postal code area, and many columns. Only small portion of the columns and rows are shown here.
 ![Economic data table](images/economic_data1.PNG)
@@ -56,25 +54,21 @@ And the average population age:
 
 ![Average age](images/average_age.png)
 
-### Finding the properties of each postal code area
+### Finding the population properties of each postal code area
 
 I used the K-means algorithm to group the region into clusters based on population and economics data, before doing that the data was analysed using the elbow method to find the optimal value of K. 
-
-To combine both the population data and venue data I intersected the best areas found from both data sets.
 
 ### Venue types of postal code areas
 
 To group the postal code areas based on the venue types I also used k-means. At first I determined the optimal K value and then converted the category column into one-hot columns which can be used as the input in k-means.
 
-The following plot shows the 9 venue category groups and the most common venue types. 
-
-![Venue categories](images/venue_categories.PNG)
+To combine both the population data and venue data I simply intersected the two data sets.
 
 ## Analysis
 
 ### Properties of each postal code area, population and venue data
 
-The following results suggests that K = 7 would work the best, so this was used as the value.
+First I found out the optimal K for the k-means using the `KElbowVisualizer` from Yellowbrick library. The following results suggests that K = 7 would work the best, so this was used as the value.
 
 ![K-means elbow](images/econ_kmeans_elbow.PNG)
 
@@ -83,7 +77,7 @@ The following results suggests that K = 7 would work the best, so this was used 
 The result of the clustering the population data with the cluster count K = 7:
 ![Average age](images/pop_properties.PNG)
 
-From the clustering results it can be seen that there is indeed separate types of areas in the region.
+Visualizing the clustering makes it easy to see how the clusters are formed.
 
 ![Group1](images/econ_grp1.png)![Group1](images/econ_grp2.png)
 ![Group1](images/econ_grp3.png)![Group1](images/econ_grp4.png)
@@ -100,36 +94,40 @@ Based on the analysis of the clusters they could be given names:
 
 It looks like cluster 6 could be a good choice for the location based on the properties of the population and economic statistics of the postal code areas.
 
-I plotted the cluster 6 areas on map and it looks like this, it seems there is one outlier on the western side of the map:
+I then plotted the cluster 6 areas on map and it looks like this, it seems there is one outlier on the western side of the map:
 
 ![Population stats group 6](images/area_map_cluster6.PNG)
 
 
+For the venue analysis I did similar K-means clustering.
+
+The following plot shows the 9 venue category groups and the most common venue types for each category.
+
+![Venue categories](images/venue_categories.PNG)
+
+I also plotted the venue groups on the map to show the geographic distribution of the venues.
 
 ![Venue clusters](images/venue_clusters.PNG)
 
-
-
-## Results 
-
-
-From the results it can be seem There are clearly different types of areas in the Helsinki capital region, some areas are relatively sparsely populated.
-
-Based on the discussions with the owners of the Good coffee company it has been found that they would like to find a place with relatively high population density that would have good purchasing power and also an existing variety of food and hospitability related venues.
-
-We can find this type of areas by creating an intersection of the economic cluster 6 and venue cluster 1 which is shown on the following map:
+To get to the final result I wanted to find the intersection of the population and the venue data. I simply created a new dataframe which contained all the postal codes. After that I added both population group labels and the venue group labels. At this point the most desirable population cluster (cluster 6) and venue cluster (cluster 1) were selected. The resulting intersection of the population data cluster 6 and venue cluster 1 is shown on the following map:
 
 ![Intersection](images/intersection_map.PNG)
 
+## Results 
+
+The first interesting observation is that there was a strong correlation between certain types of venues and certain types of population, the population cluster 6 and venue cluster 1 matched each other for almost all postal codes.
+
 ## Discussion 
+
+Based on the discussions with the owners of the Good coffee company it has been found that they would like to find a place with relatively high population density that would have good purchasing power and also an existing variety of food and hospitability related venues.
 
 
 
 ## Conclusion 
 
-There are some easy improvement possibilities. For example, since k-means tends to produce same sized clusters, it might be better to use some other clustering algorithm.
+There are some easy improvement possibilities. For example, since k-means tends to produce same sized clusters, it might be better to use some other clustering algorithm. It also might be interesting to look more closely into the correlation between population and venue types.
 
-More data would also help, there are many other data sources which could be utilized in this kind of analysis. For example there is a lot of public transport data openly available for Helsinki region.
+More data might also help, as there are many other data sources which could be utilized in this kind of analysis. For example there is a lot of public transport data openly available for Helsinki region. If this was a real world case I have a feeling analysing the public transport data might be useful.
 
 
 
