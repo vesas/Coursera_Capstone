@@ -13,12 +13,12 @@ Helsinki capital region is an area which contains the cities of Vantaa, Espoo an
 
 The aim of this study is to help the stakeholders of this imaginary coffee company to decide where to open a new cafe in the helsinki metropolitan region. The company does not previously have a cafe in Helsinki.
 
-
 ## Data
 
 Data from several sources is combined for this analysis. The main data sources are the helsinki region infoshare site (hri.fi), and Foursquare places API (https://developer.foursquare.com/docs/places-api/).
 
 ### Map data
+
 The map data about the postal areas was fetched from the helsinki region infoshare site: https://hri.fi/data/fi/dataset//paakaupunkiseudun-postinumeroalueet
 
 The map data was downloaded in KML format and was converted to GeoJSON format using python package "kml2geojson". There are 168 postal code areas in the region, as shown in the following map. 
@@ -102,9 +102,11 @@ For the venue analysis I did similar K-means clustering. To start with the posta
 
 ![Dataframes combined](images/dataframes_combined.png)
 
-Afer this the venue categories were encoded into one-hot columns and then fed into the clustering algorithm.
+After this the venue categories were encoded into one-hot columns like this:
 
-The following plot shows the 9 venue category groups and the most common venue types for each category.
+![Venues onehot](images/venues_onehot.PNG)
+
+After feeding the onehot data to the clustering algorithm we can make the following plot. It shows the 9 venue category groups and the most common venue types for each category.
 
 ![Venue categories](images/venue_categories.png)
 
@@ -122,7 +124,7 @@ An interesting observation is that there was a strong correlation between certai
 
 ## Discussion 
 
-Based on the discussions with the owners of the Good coffee company it has been found that they would like to find a place with relatively high population density that would have good purchasing power and also an existing variety of food and hospitability related venues.
+Based on the discussions with the owners of the Good coffee company it has been found that they would like to find a place with relatively high population density that would have good purchasing power and also an existing variety of food and hospitability related venues. This kind of analysis has at least the property that it makes the process more straightforward by providing smaller set of places to look at. 
 
 
 ## Conclusion 
