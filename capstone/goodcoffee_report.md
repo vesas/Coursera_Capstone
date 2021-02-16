@@ -98,8 +98,11 @@ I then plotted the cluster 6 areas on map and it looks like this, it seems there
 
 ![Population stats group 6](images/area_map_cluster6.PNG)
 
+For the venue analysis I did similar K-means clustering. To start with the postal code data was combined with the venue category data as shown in the following table:
 
-For the venue analysis I did similar K-means clustering.
+![Dataframes combined](images/dataframes_combined.png)
+
+Afer this the venue categories were encoded into one-hot columns and then fed into the clustering algorithm.
 
 The following plot shows the 9 venue category groups and the most common venue types for each category.
 
