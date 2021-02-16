@@ -103,7 +103,7 @@ For the venue analysis I did similar K-means clustering.
 
 The following plot shows the 9 venue category groups and the most common venue types for each category.
 
-![Venue categories](images/venue_categories.PNG)
+![Venue categories](images/venue_categories.png)
 
 I also plotted the venue groups on the map to show the geographic distribution of the venues.
 
@@ -115,17 +115,16 @@ To get to the final result I wanted to find the intersection of the population a
 
 ## Results 
 
-The first interesting observation is that there was a strong correlation between certain types of venues and certain types of population, the population cluster 6 and venue cluster 1 matched each other for almost all postal codes.
+An interesting observation is that there was a strong correlation between certain types of venues and certain types of population, the population cluster 6 and venue cluster 1 matched each other for almost all postal codes.
 
 ## Discussion 
 
 Based on the discussions with the owners of the Good coffee company it has been found that they would like to find a place with relatively high population density that would have good purchasing power and also an existing variety of food and hospitability related venues.
 
 
-
 ## Conclusion 
 
-There are some easy improvement possibilities. For example, since k-means tends to produce same sized clusters, it might be better to use some other clustering algorithm. It also might be interesting to look more closely into the correlation between population and venue types.
+There are some easy improvement possibilities. For example, since k-means tends to produce same sized clusters, it might be better to use some other clustering algorithm. It also might be interesting to look more closely into the correlation between population and venue types, does a population type correlate or even predict profitability of venues. Using dimensionality reduction (PCA) would help with visualising the features of the clusters.
 
 More data might also help, as there are many other data sources which could be utilized in this kind of analysis. For example there is a lot of public transport data openly available for Helsinki region. If this was a real world case I have a feeling analysing the public transport data might be useful.
 
