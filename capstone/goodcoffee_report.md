@@ -134,5 +134,8 @@ There are some easy improvement possibilities. For example, since k-means tends 
 More data might also help, as there are many other data sources which could be utilized in this kind of analysis. For example there is a lot of public transport data openly available for Helsinki region. If this was a real world case I have a feeling analysing the public transport data might be useful.
 
 
+## References
 
-
+[1] Helsinki region infoshare site (https://hri.fi/data/fi/dataset//paakaupunkiseudun-postinumeroalueet)
+[2] Foursquare places API (https://developer.foursquare.com/docs/places-api/)
+[3] Statistics Institute of Finland (https://pxnet2.stat.fi/PXWeb/pxweb/fi/Postinumeroalueittainen_avoin_tieto/)
